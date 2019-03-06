@@ -1,5 +1,5 @@
 # http://dkhramov.dp.ua/Comp.ShinyLesson03#.XH6ZtS5uaM8
-
+# https://djinni.co/jobs/?primary_keyword=Data+Science
 library(shiny)
 
 shinyUI(fluidPage(
