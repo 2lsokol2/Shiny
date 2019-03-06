@@ -1,3 +1,5 @@
+# runApp("S:/PROJECTS/! Individual/LSokol/!Rstudio/shiny", display.mode = "showcase")
+
 library(shiny)
 
 shinyUI(fluidPage(
