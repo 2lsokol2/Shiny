@@ -15,7 +15,7 @@ shinyServer(
     colm <- reactive({
       as.character(input$var)
     })
- 
+    
     output$dataset <- renderText({ 
       paste("Data set is", ifelse(dataset()==1, 'Train',
                                   ifelse(dataset()==2, 'Train1',
@@ -23,9 +23,9 @@ shinyServer(
       
     })
     
-
+    
     output$plot <- renderPlot({
-        var_stability(colm(), dataset())
+      var_stability(colm(), dataset())
     })
     
     output$sum <- renderPrint({
@@ -38,6 +38,13 @@ shinyServer(
       
     })
     
-})
+  })
+
+
+
+
+
+
+
 
 
