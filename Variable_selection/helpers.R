@@ -7,6 +7,9 @@ library(cowplot)
 library(gtable)
 library(InformationValue)
 
+# Restore the object
+work_data <- readRDS(file = "work_data.rds")
+
 ### Create loop for 'Bad Rate' (add columns with BR for every variable)
 
 # first column to calc 'Bad Rate'
@@ -53,7 +56,7 @@ iv_func <- function(work_data){
 
 ### Create statistical plot and table for every variable
 plot_func <- function(var_name, iv_table, work_data){
- 
+  
   Total<-length(work_data$target_for_calc)
   Good<-sum(work_data$target_for_calc)
   Bad<-Total-Good
@@ -61,20 +64,18 @@ plot_func <- function(var_name, iv_table, work_data){
   
   plot1_hist <- ggplot(work_data, aes(work_data[,j])) + 
     geom_bar(aes(y = (..count..)/sum(..count..)), fill = "steelblue4") +
-    scale_y_continuous(labels=scales::percent, limits=c(0, .9)) +
+    scale_y_continuous(labels=scales::percent, limits=c(0, 1)) +
     geom_text(aes( y = ((..count..)/sum(..count..)),
                    label = scales::percent((..count..)/sum(..count..))), stat = "count", vjust =-.1)+
-    theme(axis.text.x = element_text(angle=10, vjust=0.9),
-          plot.margin = unit(c(-.1,-.1,-.1,-.1), "cm") ) + 
+    theme(axis.text.x = element_text(angle=10, vjust=0.9) ) + 
     labs( y = "Class", x = "")
   
   # plot of 'Bad Rate'
   plot2_BR_line <- ggplot(work_data, aes(x=work_data[,j],y=work_data[,j-frst_var+col+1],group=1)) + 
     geom_line(color="indianred3",size=1)+
     geom_point(color="indianred3") +
-    theme(axis.text.x = element_text(angle=10, vjust=0.9),
-          plot.margin = unit(c(-.1,-.1,-.1,-.1), "cm") ) + 
-    scale_y_continuous(limits=c(0, .8),breaks=c(.1, .3, .5, .7), 
+    theme(axis.text.x = element_text(angle=10, vjust=1)) + 
+    scale_y_continuous(limits=c(0, 1),breaks=c(.1, .3, .5, .7, .9), 
                        labels = function(x) paste0(x*100, "%"))+
     labs( y = "BR", x = "")    
   
@@ -137,8 +138,8 @@ plot_func <- function(var_name, iv_table, work_data){
   
   # set name of variable and her 'Strength'(dependense of IV: 'Strong', Weak, 'Very weak' and etc)
   text1 <- paste0("
-                     ",names(work_data)[j],": ", iv_table$Strength[iv_table$variables == names(work_data)[j]], " 
-                                                                                                             ")
+                  ",names(work_data)[j],": ", iv_table$Strength[iv_table$variables == names(work_data)[j]], " 
+                  ")
   # set style of 'text1'
   title1 <- ggparagraph(text = text1, face = "italic", size = 17,color = "black")
   
@@ -154,14 +155,8 @@ plot_func <- function(var_name, iv_table, work_data){
   
   # union 4 object in one file: 
   print(ggarrange(title1, title2, title3, g, table,
-                  ncol = 1, nrow = 5,heights = c(.15, .05, .05, .55, .55)))
+                  ncol = 1, nrow = 5,heights = c(.2, .08, .08, .6, .7)))
 }
-
-
-
-
-
-
 
 
 ### Data preparating 
@@ -182,22 +177,29 @@ work_data_test <- br_func(work_data_test)
 
 ### Final function
 var_stability <- function(var_name, dataset){
-  for (i in length(dataset))
-    for (j in length(var_name))
-  
-  if(dataset==1){
-    work_data <- work_data_dev
-  } else if (dataset==2){
-    work_data <- work_data_dev1
-  } else if (dataset==3){
-    work_data <- work_data_dev2  
-  } else {
-    work_data <- work_data_test
-  }
+      if(dataset ==1){
+        work_data <- work_data_dev
+      } else if (dataset ==2){
+        work_data <- work_data_dev1
+      } else if (dataset ==3){
+        work_data <- work_data_dev2  
+      } else {
+        work_data <- work_data_test
+      }
   
   plot_func(var_name, iv_func(work_data), work_data)
-
+  
 }
+
+
+
+
+
+
+
+
+
+
 
 
 
